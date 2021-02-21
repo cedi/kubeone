@@ -20,6 +20,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 
 	"k8c.io/kubeone/pkg/clientutil"
 	"k8c.io/kubeone/pkg/kubeconfig"
@@ -45,37 +46,32 @@ func Deploy(s *state.State) error {
 	ciliumImage := s.Cluster.RegistryConfiguration.ImageRegistry(ciliumImageRegistry) + ciliumImageName
 	controllerImage := s.Cluster.RegistryConfiguration.ImageRegistry(ciliumImageRegistry) + ciliumoperatorImageName
 
-	for _, obj := range serviceAccount() {
-		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
-			return errors.WithStack(err)
-		}
-	}
+	k8sObjects := []runtime.Object{}
 
-	for _, obj := range configMap() {
-		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
-			return errors.WithStack(err)
-		}
-	}
+	k8sObjects = append(k8sObjects,
+		// ServiceAccounts
+		serviceAccountCilium(),
+		serviceAccountCiliumOperator(),
 
-	for _, obj := range clusterRole() {
-		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
-			return errors.WithStack(err)
-		}
-	}
+		// ConfigMap
+		configMap(),
 
-	for _, obj := range clusterRoleBinding() {
-		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
-			return errors.WithStack(err)
-		}
-	}
+		// ClusterRole
+		clusterRoleCilium(),
+		clusterRoleCiliumOperator(),
 
-	for _, obj := range daemonSet(installCNIImage, ciliumImage) {
-		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
-			return errors.WithStack(err)
-		}
-	}
+		// ClusterRoleBinding
+		clusterRoleBindingCilium(),
+		clusterRoleBindingCiliumOperator(),
 
-	for _, obj := range controllerDeployment(controllerImage) {
+		// DaemonSet
+		daemonSet(installCNIImage, ciliumImage),
+
+		// Deployment
+		controllerDeployment(controllerImage),
+	)
+
+	for _, obj := range k8sObjects {
 		if err := clientutil.CreateOrUpdate(ctx, s.DynamicClient, obj); err != nil {
 			return errors.WithStack(err)
 		}

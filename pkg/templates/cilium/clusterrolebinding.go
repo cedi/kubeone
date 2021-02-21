@@ -21,40 +21,41 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func clusterRoleBinding() []rbacv1.ClusterRoleBinding {
-	return []rbacv1.ClusterRoleBinding{
-		{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: "cilium",
-			},
-			RoleRef: rbacv1.RoleRef{
-				APIGroup: "rbac.authorization.k8s.io",
-				Kind:     "ClusterRole",
-				Name:     "cilium",
-			},
-			Subjects: []rbacv1.Subject{
-				{
-					Kind:      "ServiceAccount",
-					Name:      "cilium",
-					Namespace: metav1.NamespaceSystem,
-				},
+func clusterRoleBindingCilium() *rbacv1.ClusterRoleBinding {
+	return &rbacv1.ClusterRoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cilium",
+		},
+		RoleRef: rbacv1.RoleRef{
+			APIGroup: "rbac.authorization.k8s.io",
+			Kind:     "ClusterRole",
+			Name:     "cilium",
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      "ServiceAccount",
+				Name:      "cilium",
+				Namespace: metav1.NamespaceSystem,
 			},
 		},
-		{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: "cilium-operator",
-			},
-			RoleRef: rbacv1.RoleRef{
-				APIGroup: "rbac.authorization.k8s.io",
-				Kind:     "ClusterRole",
-				Name:     "cilium-operator",
-			},
-			Subjects: []rbacv1.Subject{
-				{
-					Kind:      "ServiceAccount",
-					Name:      "cilium-operator",
-					Namespace: metav1.NamespaceSystem,
-				},
+	}
+}
+
+func clusterRoleBindingCiliumOperator() *rbacv1.ClusterRoleBinding {
+	return &rbacv1.ClusterRoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cilium-operator",
+		},
+		RoleRef: rbacv1.RoleRef{
+			APIGroup: "rbac.authorization.k8s.io",
+			Kind:     "ClusterRole",
+			Name:     "cilium-operator",
+		},
+		Subjects: []rbacv1.Subject{
+			{
+				Kind:      "ServiceAccount",
+				Name:      "cilium-operator",
+				Namespace: metav1.NamespaceSystem,
 			},
 		},
 	}

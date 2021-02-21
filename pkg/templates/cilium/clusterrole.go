@@ -21,17 +21,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func clusterRole() []rbacv1.ClusterRole {
-	clusterRoleCilium := clusterRoleCilium()
-	clusterRoleCiliumOperator := clusterRoleCiliumOperator()
-
-	return []rbacv1.ClusterRole{clusterRoleCilium, clusterRoleCiliumOperator}
-}
-
-func clusterRoleCilium() rbacv1.ClusterRole {
+func clusterRoleCilium() *rbacv1.ClusterRole {
 	defaultVerbs := []string{"get", "list", "watch"}
 
-	return rbacv1.ClusterRole{
+	return &rbacv1.ClusterRole{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "cilium",
 		},
@@ -114,8 +107,8 @@ func clusterRoleCilium() rbacv1.ClusterRole {
 	}
 }
 
-func clusterRoleCiliumOperator() rbacv1.ClusterRole {
-	return rbacv1.ClusterRole{
+func clusterRoleCiliumOperator() *rbacv1.ClusterRole {
+	return &rbacv1.ClusterRole{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "cilium-operator",
 		},

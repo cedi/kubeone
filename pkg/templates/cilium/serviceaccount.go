@@ -21,19 +21,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func serviceAccount() []v1.ServiceAccount {
-	return []v1.ServiceAccount{
-		{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "cilium",
-				Namespace: metav1.NamespaceSystem,
-			},
+func serviceAccountCilium() *v1.ServiceAccount {
+	return &v1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "cilium",
+			Namespace: metav1.NamespaceSystem,
 		},
-		{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "cilium-operator",
-				Namespace: metav1.NamespaceSystem,
-			},
+	}
+}
+
+func serviceAccountCiliumOperator() *v1.ServiceAccount {
+	return &v1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "cilium-operator",
+			Namespace: metav1.NamespaceSystem,
 		},
 	}
 }
