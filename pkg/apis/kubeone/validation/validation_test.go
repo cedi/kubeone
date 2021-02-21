@@ -809,6 +809,13 @@ func TestValidateCNIConfig(t *testing.T) {
 			expectedError: false,
 		},
 		{
+			name: "valid cilium CNI config",
+			cniConfig: &kubeone.CNI{
+				Cilium: &kubeone.CiliumSpec{},
+			},
+			expectedError: false,
+		},
+		{
 			name: "valid WeaveNet CNI config with encryption enabled",
 			cniConfig: &kubeone.CNI{
 				WeaveNet: &kubeone.WeaveNetSpec{
@@ -849,6 +856,40 @@ func TestValidateCNIConfig(t *testing.T) {
 			expectedError: true,
 		},
 		{
+			name: "Cilium and Canal specified at the same time",
+			cniConfig: &kubeone.CNI{
+				Canal:  &kubeone.CanalSpec{},
+				Cilium: &kubeone.CiliumSpec{},
+			},
+			expectedError: true,
+		},
+		{
+			name: "Cilium and WeaveNet specified at the same time",
+			cniConfig: &kubeone.CNI{
+				WeaveNet: &kubeone.WeaveNetSpec{},
+				Cilium:   &kubeone.CiliumSpec{},
+			},
+			expectedError: true,
+		},
+		{
+			name: "Cilium and External specified at the same time",
+			cniConfig: &kubeone.CNI{
+				External: &kubeone.ExternalCNISpec{},
+				Cilium:   &kubeone.CiliumSpec{},
+			},
+			expectedError: true,
+		},
+		{
+			name: "Cilium, Canal, WeaveNet, and External specified at the same time",
+			cniConfig: &kubeone.CNI{
+				Canal:    &kubeone.CanalSpec{},
+				WeaveNet: &kubeone.WeaveNetSpec{},
+				External: &kubeone.ExternalCNISpec{},
+				Cilium:   &kubeone.CiliumSpec{},
+			},
+			expectedError: true,
+		},
+		{
 			name:          "no CNI config specified",
 			cniConfig:     &kubeone.CNI{},
 			expectedError: true,
@@ -859,7 +900,7 @@ func TestValidateCNIConfig(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			errs := ValidateCNI(tc.cniConfig, nil)
 			if (len(errs) == 0) == tc.expectedError {
-				t.Errorf("test case failed: expected %v, but got %v", tc.expectedError, (len(errs) != 0))
+				t.Errorf("test case '%s' failed: expected %v, but got %v", tc.name, tc.expectedError, (len(errs) != 0))
 			}
 		})
 	}

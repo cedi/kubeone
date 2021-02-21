@@ -258,6 +258,12 @@ func ValidateCNI(c *kubeone.CNI, fldPath *field.Path) field.ErrorList {
 		}
 		cniFound = true
 	}
+	if c.Cilium != nil {
+		if cniFound {
+			allErrs = append(allErrs, field.Forbidden(fldPath.Child("cilium"), "only one cni plugin can be used at the same time"))
+		}
+		cniFound = true
+	}
 
 	if !cniFound {
 		allErrs = append(allErrs, field.Invalid(fldPath, "", "cni plugin must be specified"))

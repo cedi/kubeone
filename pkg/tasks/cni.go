@@ -30,6 +30,8 @@ func ensureCNI(s *state.State) error {
 		return ensureCNICanal(s)
 	case s.Cluster.ClusterNetwork.CNI.WeaveNet != nil:
 		return ensureCNIWeaveNet(s)
+	case s.Cluster.ClusterNetwork.CNI.Cilium != nil:
+		return ensureCNICilium(s)
 	case s.Cluster.ClusterNetwork.CNI.External != nil:
 		return ensureCNIExternal(s)
 	}
@@ -44,6 +46,11 @@ func ensureCNIWeaveNet(s *state.State) error {
 
 func ensureCNICanal(s *state.State) error {
 	s.Logger.Infoln("Applying canal CNI plugin...")
+	return canal.Deploy(s)
+}
+
+func ensureCNICilium(s *state.State) error {
+	s.Logger.Infoln("Applying cilium CNI plugin...")
 	return canal.Deploy(s)
 }
 

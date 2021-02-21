@@ -40,6 +40,8 @@ func Convert_v1alpha1_CNI_To_kubeone_CNI(in *CNI, out *kubeoneapi.CNI, s convers
 		out.WeaveNet = &kubeoneapi.WeaveNetSpec{
 			Encrypted: in.Encrypted,
 		}
+	case CNIProviderCilium:
+		out.Cilium = &kubeoneapi.CiliumSpec{}
 	case CNIProviderExternal:
 		out.External = &kubeoneapi.ExternalCNISpec{}
 	default:
@@ -60,6 +62,8 @@ func Convert_kubeone_CNI_To_v1alpha1_CNI(in *kubeoneapi.CNI, out *CNI, s convers
 	case in.WeaveNet != nil:
 		out.Provider = CNIProviderWeaveNet
 		out.Encrypted = in.WeaveNet.Encrypted
+	case in.Cilium != nil:
+		out.Provider = CNIProviderCilium
 	case in.External != nil:
 		out.Provider = CNIProviderExternal
 	}

@@ -261,6 +261,8 @@ type CNI struct {
 	Canal *CanalSpec `json:"canal,omitempty"`
 	// WeaveNet
 	WeaveNet *WeaveNetSpec `json:"weaveNet,omitempty"`
+	// Cilium
+	Cilium *CiliumSpec `json:"cilium,omitempty"`
 	// External
 	External *ExternalCNISpec `json:"external,omitempty"`
 }
@@ -276,6 +278,10 @@ type CanalSpec struct {
 type WeaveNetSpec struct {
 	// Encrypted
 	Encrypted bool `json:"encrypted,omitempty"`
+}
+
+// CiliumSpec defines the cilium CNI plugin
+type CiliumSpec struct {
 }
 
 // ExternalCNISpec defines the external CNI plugin.

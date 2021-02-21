@@ -149,6 +149,14 @@ const (
 	// More info: https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
 	CNIProviderWeaveNet CNIProvider = "weave-net"
 
+	// CNIProviderCilium is a cilium CNI plugin.
+	// Highlights:
+	// * Simple flat L3 network with native routing or overlay
+	// * Distributed LoadBalancing
+	// * Maximum performance due to eBPF with XDP and DSR Support
+	// More info: https://docs.cilium.io/en/v1.9/intro/#functionality-overview
+	CNIProviderCilium CNIProvider = "cilium"
+
 	// CNIProviderExternal is an external CNI plugin.
 	// The CNI plugin can be installed as Addon or manually
 	// More info: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network
